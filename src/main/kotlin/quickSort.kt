@@ -11,20 +11,18 @@ class QuickSort(private val a: IntArray) {
     }
 
     private fun partition(lowIndex: Int, highIndex: Int): Int {
-        var pivotIndex = (lowIndex + highIndex) / 2
-        pivotIndex = when {
-            a[lowIndex] <= a[highIndex] == a[highIndex] <= a[pivotIndex] -> highIndex
-            a[lowIndex] <= a[pivotIndex] == a[pivotIndex] <= a[highIndex] -> pivotIndex
+        val middleIndex = (lowIndex + highIndex) / 2
+        var pivotIndex = when {
+            a[lowIndex] <= a[highIndex] == a[highIndex] <= a[middleIndex] -> highIndex
+            a[lowIndex] <= a[middleIndex] == a[middleIndex] <= a[highIndex] -> middleIndex
             else -> lowIndex
         }
         val pivot = a[pivotIndex]
-
         swap(pivotIndex, highIndex)
         pivotIndex = lowIndex
         for (i in lowIndex until highIndex)
             if (a[i] < pivot) swap(i, pivotIndex++)
         swap(highIndex, pivotIndex)
-
         return pivotIndex
     }
 
@@ -39,7 +37,7 @@ class QuickSort(private val a: IntArray) {
 
 fun main() {
     val size = 100_000_000
-    val a1 = IntArray(size) { (1..size).random() / (1..10).random() }
+    val a1 = IntArray(size) { (1..size).random() }
     val a2 = a1.clone()
 
     println(a1.joinToString(" ", "a1 = [", "]", 20, " ... of ${a1.size - 20}") { "%d".format(it) })
