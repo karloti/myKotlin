@@ -36,8 +36,8 @@ class QuickSort(private val a: IntArray) {
 }
 
 fun main() {
-    val size = 100_000_000
-    val a1 = IntArray(size) { (1..size).random() }
+    val size = 300_000_000
+    val a1 = IntArray(size) { (1..size / 10).random() }
     val a2 = a1.clone()
 
     println(a1.joinToString(" ", "a1 = [", "]", 20, " ... of ${a1.size - 20}") { "%d".format(it) })
