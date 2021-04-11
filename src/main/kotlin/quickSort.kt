@@ -10,43 +10,36 @@ class QuickSort(private val a: IntArray) {
         sort(0, a.lastIndex)
     }
 
-    private fun partition(lowIndex: Int, highIndex: Int): Pair<Int, Int> {
-        val middleIndex = (lowIndex + highIndex) / 2
-        var pivotIndex = when {
-            a[lowIndex] <= a[highIndex] == a[highIndex] <= a[middleIndex] -> highIndex
-            a[lowIndex] <= a[middleIndex] == a[middleIndex] <= a[highIndex] -> middleIndex
+    private fun partition(lowIndex: Int, highIndex: Int): Int {
+        var pivotIndex = (lowIndex + highIndex) / 2
+        pivotIndex = when {
+            a[lowIndex] <= a[highIndex] == a[highIndex] <= a[pivotIndex] -> highIndex
+            a[lowIndex] <= a[pivotIndex] == a[pivotIndex] <= a[highIndex] -> pivotIndex
             else -> lowIndex
         }
         val pivot = a[pivotIndex]
-        var pivotCount = 1
 
         swap(pivotIndex, highIndex)
         pivotIndex = lowIndex
-
-        for (i in lowIndex until highIndex) when {
-            a[i] < pivot -> swap(i, pivotIndex++)
-            a[i] == pivot -> pivotCount++
-        }
+        for (i in lowIndex until highIndex)
+            if (a[i] < pivot) swap(i, pivotIndex++)
         swap(highIndex, pivotIndex)
 
-        var i = pivotIndex
-        var count = pivotCount - 1
-        while (count > 0 && i++ <= highIndex) if (a[i] == pivot) swap(i, pivotIndex + count--)
-        return pivotIndex to pivotIndex + pivotCount - 1
+        return pivotIndex
     }
 
     private fun sort(lowIndex: Int, highIndex: Int) {
         if (lowIndex < highIndex) {
-            val (pivotLowIndex, pivotHighIndex) = partition(lowIndex, highIndex)
-            sort(lowIndex, pivotLowIndex - 1)
-            sort(pivotHighIndex + 1, highIndex)
+            val pivotIndex = partition(lowIndex, highIndex)
+            sort(lowIndex, pivotIndex - 1)
+            sort(pivotIndex + 1, highIndex)
         }
     }
 }
 
 fun main() {
-    val size = 300_000_000
-    val a1 = IntArray(size) { (1..size / 10).random() }
+    val size = 100_000_000
+    val a1 = IntArray(size) { (1..size).random() / (1..10).random() }
     val a2 = a1.clone()
 
     println(a1.joinToString(" ", "a1 = [", "]", 20, " ... of ${a1.size - 20}") { "%d".format(it) })
@@ -59,11 +52,13 @@ fun main() {
         println("Finished $it ms")
     }
 
-    println("\nStart Karlo Second!")
+    println("\nStart Karlo!")
     measureTimeMillis {
         QuickSort(a2)
     }.let {
         println(a2.joinToString(" ", "a2 = [", "]", 20, " ... of ${a2.size - 20}") { "%d".format(it) })
         println("Finished $it ms")
     }
+
+    println("\nEquality: " + a1.contentEquals(a2))
 }
